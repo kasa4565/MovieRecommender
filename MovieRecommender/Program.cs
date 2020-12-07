@@ -14,6 +14,7 @@ namespace MovieRecommender
             ITransformer model = BuildAndTrainModel(mlContext, trainingDataView);
             EvaluateModel(mlContext, testDataView, model);
             UseModelForSinglePrediction(mlContext, model);
+            SaveModel(mlContext, trainingDataView.Schema, model);
         }
 
         public static (IDataView training, IDataView test) LoadData(MLContext mlContext)
@@ -73,6 +74,14 @@ namespace MovieRecommender
                 Console.WriteLine("Movie " + testInput.movieId + " is not recommended for user " + testInput.userId);
             }
 
+        }
+
+        public static void SaveModel(MLContext mlContext, DataViewSchema trainingDataViewSchema, ITransformer model)
+        {
+            var modelPath = Path.Combine(Environment.CurrentDirectory, "Data", "MovieRecommenderModel.zip");
+
+            Console.WriteLine("=============== Saving the model to a file ===============");
+            mlContext.Model.Save(model, trainingDataViewSchema, modelPath);
         }
     }
 }
