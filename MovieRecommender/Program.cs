@@ -12,6 +12,7 @@ namespace MovieRecommender
             MLContext mlContext = new MLContext();
             (IDataView trainingDataView, IDataView testDataView) = LoadData(mlContext);
             ITransformer model = BuildAndTrainModel(mlContext, trainingDataView);
+            EvaluateModel(mlContext, testDataView, model);
         }
 
         public static (IDataView training, IDataView test) LoadData(MLContext mlContext)
@@ -44,6 +45,15 @@ namespace MovieRecommender
             ITransformer model = trainerEstimator.Fit(trainingDataView);
 
             return model;
+        }
+
+        public static void EvaluateModel(MLContext mlContext, IDataView testDataView, ITransformer model)
+        {
+            Console.WriteLine("=============== Evaluating the model ===============");
+            var prediction = model.Transform(testDataView);
+            var metrics = mlContext.Regression.Evaluate(prediction, labelColumnName: "Label", scoreColumnName: "Score");
+            Console.WriteLine("Root Mean Squared Error : " + metrics.RootMeanSquaredError.ToString());
+            Console.WriteLine("RSquared: " + metrics.RSquared.ToString());
         }
     }
 }
