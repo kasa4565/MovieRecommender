@@ -14,9 +14,7 @@ namespace MovieRecommender
             ITransformer model = BuildAndTrainModel(mlContext, trainingDataView);
             EvaluateModel(mlContext, testDataView, model);
             UseModelForSinglePrediction(mlContext, model);
-            SaveModel(mlContext, trainingDataView.Schema, model);
         }
-
         public static (IDataView training, IDataView test) LoadData(MLContext mlContext)
         {
             var trainingDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "recommendation-ratings-train.csv");
@@ -27,7 +25,6 @@ namespace MovieRecommender
 
             return (trainingDataView, testDataView);
         }
-
         public static ITransformer BuildAndTrainModel(MLContext mlContext, IDataView trainingDataView)
         {
             IEstimator<ITransformer> estimator = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "userIdEncoded", inputColumnName: "userId")
@@ -48,7 +45,6 @@ namespace MovieRecommender
 
             return model;
         }
-
         public static void EvaluateModel(MLContext mlContext, IDataView testDataView, ITransformer model)
         {
             Console.WriteLine("=============== Evaluating the model ===============");
@@ -57,7 +53,6 @@ namespace MovieRecommender
             Console.WriteLine("Root Mean Squared Error : " + metrics.RootMeanSquaredError.ToString());
             Console.WriteLine("RSquared: " + metrics.RSquared.ToString());
         }
-
         public static void UseModelForSinglePrediction(MLContext mlContext, ITransformer model)
         {
             Console.WriteLine("=============== Making a prediction ===============");
@@ -74,14 +69,6 @@ namespace MovieRecommender
                 Console.WriteLine("Movie " + testInput.movieId + " is not recommended for user " + testInput.userId);
             }
 
-        }
-
-        public static void SaveModel(MLContext mlContext, DataViewSchema trainingDataViewSchema, ITransformer model)
-        {
-            var modelPath = Path.Combine(Environment.CurrentDirectory, "Data", "MovieRecommenderModel.zip");
-
-            Console.WriteLine("=============== Saving the model to a file ===============");
-            mlContext.Model.Save(model, trainingDataViewSchema, modelPath);
         }
     }
 }

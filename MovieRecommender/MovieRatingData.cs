@@ -14,7 +14,6 @@ namespace MovieRecommender
         [LoadColumn(2)]
         public float Label;
     }
-
     public class MovieRatingPrediction
     {
         public float Label;
