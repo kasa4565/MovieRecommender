@@ -13,6 +13,7 @@ namespace MovieRecommender
             (IDataView trainingDataView, IDataView testDataView) = LoadData(mlContext);
             ITransformer model = BuildAndTrainModel(mlContext, trainingDataView);
             EvaluateModel(mlContext, testDataView, model);
+            UseModelForSinglePrediction(mlContext, model);
         }
 
         public static (IDataView training, IDataView test) LoadData(MLContext mlContext)
@@ -54,6 +55,24 @@ namespace MovieRecommender
             var metrics = mlContext.Regression.Evaluate(prediction, labelColumnName: "Label", scoreColumnName: "Score");
             Console.WriteLine("Root Mean Squared Error : " + metrics.RootMeanSquaredError.ToString());
             Console.WriteLine("RSquared: " + metrics.RSquared.ToString());
+        }
+
+        public static void UseModelForSinglePrediction(MLContext mlContext, ITransformer model)
+        {
+            Console.WriteLine("=============== Making a prediction ===============");
+            var predictionEngine = mlContext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(model);
+            var testInput = new MovieRating { userId = 6, movieId = 10 };
+
+            var movieRatingPrediction = predictionEngine.Predict(testInput);
+            if (Math.Round(movieRatingPrediction.Score, 1) > 3.5)
+            {
+                Console.WriteLine("Movie " + testInput.movieId + " is recommended for user " + testInput.userId);
+            }
+            else
+            {
+                Console.WriteLine("Movie " + testInput.movieId + " is not recommended for user " + testInput.userId);
+            }
+
         }
     }
 }
