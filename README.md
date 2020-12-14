@@ -6,6 +6,6 @@ Based on the completed questionnaire, suggest to the teacher 7 films that he has
 ## Solution authors
 Sebastian Bobrowski, Katarzyna Czerwińska
 ## Instructions for use
-Execute the dotnet run command in the solution directory (with SLN file).
+Execute the "dotnet run" command in the project directory (with *.csproj file).
 ## References
 * Tutorial: https://docs.microsoft.com/en-gb/dotnet/machine-learning/tutorials/movie-recommendation#select-the-appropriate-machine-learning-task
