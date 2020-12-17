@@ -15,7 +15,7 @@ namespace MovieRecommender
             EvaluateModel(mlContext, testDataView, model);
             UseModelForSinglePrediction(mlContext, model);
         }
-        public static (IDataView training, IDataView test) LoadData(MLContext mlContext)
+        private static (IDataView training, IDataView test) LoadData(MLContext mlContext)
         {
             var trainingDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "recommendation-ratings-train.csv");
             var testDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "recommendation-ratings-test.csv");
@@ -25,7 +25,7 @@ namespace MovieRecommender
 
             return (trainingDataView, testDataView);
         }
-        public static ITransformer BuildAndTrainModel(MLContext mlContext, IDataView trainingDataView)
+        private static ITransformer BuildAndTrainModel(MLContext mlContext, IDataView trainingDataView)
         {
             IEstimator<ITransformer> estimator = mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "userIdEncoded", inputColumnName: "userId")
                 .Append(mlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "movieIdEncoded", inputColumnName: "movieId"));
@@ -45,7 +45,7 @@ namespace MovieRecommender
 
             return model;
         }
-        public static void EvaluateModel(MLContext mlContext, IDataView testDataView, ITransformer model)
+        private static void EvaluateModel(MLContext mlContext, IDataView testDataView, ITransformer model)
         {
             Console.WriteLine("=============== Evaluating the model ===============");
             var prediction = model.Transform(testDataView);
@@ -53,14 +53,14 @@ namespace MovieRecommender
             Console.WriteLine("Root Mean Squared Error : " + metrics.RootMeanSquaredError.ToString());
             Console.WriteLine("RSquared: " + metrics.RSquared.ToString());
         }
-        public static void UseModelForSinglePrediction(MLContext mlContext, ITransformer model)
+        private static void UseModelForSinglePrediction(MLContext mlContext, ITransformer model)
         {
             Console.WriteLine("=============== Making a prediction ===============");
             var predictionEngine = mlContext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(model);
-            var testInput = new MovieRating { userId = 6, movieId = 10 };
+            var testInput = new MovieRating { userId = 37, movieId = 175 };
 
             var movieRatingPrediction = predictionEngine.Predict(testInput);
-            if (Math.Round(movieRatingPrediction.Score, 1) > 3.5)
+            if (Math.Round(movieRatingPrediction.Score, 1) > 7)
             {
                 Console.WriteLine("Movie " + testInput.movieId + " is recommended for user " + testInput.userId);
             }
