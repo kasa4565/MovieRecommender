@@ -19,4 +19,11 @@ namespace MovieRecommender
         public float Label;
         public float Score;
     }
+
+    public class MovieRatingData
+    {
+        public float UserId { get; set; }
+        public float MovieId { get; set; }
+        public float Score { get; set; }
+    }
 }

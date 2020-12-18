@@ -18,6 +18,8 @@ namespace MovieRecommender
             _Users = GetUsers();
         }
 
+        public int GetMoviesCount() => _Movies.Count;
+
         public string GetMovieTitleByIndex(float index)
         {
             var movie = _Movies.Where(m => m.Index == index).FirstOrDefault();
