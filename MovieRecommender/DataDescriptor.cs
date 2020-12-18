@@ -70,13 +70,11 @@ namespace MovieRecommender
             var user = _Users.Where(u => u.Index == index).FirstOrDefault();
             return (user.FirstName, user.LastName);
         }
-
-<<<<<<< HEAD
+        
         /// <summary>
         /// Read movies from file and return List-type data
         /// </summary>
         /// <returns>records</returns>
-=======
         private List<Rating> GetRatings()
         {
             var projectPath = Environment.CurrentDirectory;
@@ -96,8 +94,7 @@ namespace MovieRecommender
 
             return records;
         }
-
->>>>>>> origin/DisplayImprovement
+        
         private List<Movie> GetMovies()
         {
             var projectPath = Environment.CurrentDirectory;
@@ -161,16 +158,11 @@ namespace MovieRecommender
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
-<<<<<<< HEAD
-}
-=======
 
-    public class Rating
-    {
+    public class Rating {
         public float userId { get; set; }
         public float movieId { get; set; }
         public float rating { get; set; }
         public float timestamp { get; set; }
     }
 }
->>>>>>> origin/DisplayImprovement
