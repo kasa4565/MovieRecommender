@@ -1,10 +1,14 @@
-﻿using System;
+﻿// Authors: Sebastian Bobrowski (s17603), Katarzyna Czerwińska (s17098)
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Microsoft.ML.Data;
 
 namespace MovieRecommender
 {
+    /// <summary>
+    /// Specifies an input data
+    /// </summary>
     public class MovieRating
     {
         [LoadColumn(0)]
@@ -14,12 +18,18 @@ namespace MovieRecommender
         [LoadColumn(2)]
         public float Label;
     }
+    
+    /// <summary>
+    /// Represents predicted results
+    /// </summary>
     public class MovieRatingPrediction
     {
         public float Label;
         public float Score;
     }
-
+    /// <summary>
+    /// Specifies ratings
+    /// </summary>
     public class MovieRatingData
     {
         public float UserId { get; set; }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿// Authors: Sebastian Bobrowski (s17603), Katarzyna Czerwińska (s17098)
+using System;
 using System.Collections.Generic;
 using System.IO;
 using Microsoft.ML;
@@ -11,6 +12,10 @@ namespace MovieRecommender
         private static DataDescriptor _DataDescriptor;
         private const float _UserId = 23;
 
+        /// <summary>
+        /// Start the program
+        /// </summary>
+        /// <param name="args"></param>
         static void Main(string[] args)
         {
             _DataDescriptor = new DataDescriptor();
@@ -19,6 +24,10 @@ namespace MovieRecommender
             PrintResults(movieRecommendation);
         }
 
+        /// <summary>
+        /// Display prediction results to the console
+        /// </summary>
+        /// <param name="movieRecommendation"></param>
         private static void PrintResults((List<float> bestSevenMovies, List<float> worstSevenMovies) movieRecommendation)
         {
             Console.WriteLine("=============== Making a prediction ===============");

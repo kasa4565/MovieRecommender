@@ -1,4 +1,5 @@
-﻿using Microsoft.ML;
+﻿// Authors: Sebastian Bobrowski (s17603), Katarzyna Czerwińska (s17098)
+using Microsoft.ML;
 using Microsoft.ML.Trainers;
 using System;
 using System.IO;
@@ -8,15 +9,27 @@ namespace MovieRecommender
 {
     public class MovieRatingPredictor
     {
+        /// <summary>
+        /// Instances of classes that create the context of ML operations and model processing
+        /// </summary>
         private readonly MLContext _MlContext;
         private ITransformer _Model;
 
+        /// <summary>
+        /// MovieRatingPredictor constructor
+        /// </summary>
         public MovieRatingPredictor()
         {
             _MlContext = new MLContext();
             PrepareModel();
         }
 
+        /// <summary>
+        /// Make prediction with the built model
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="movieId"></param>
+        /// <returns>movieRatingPrediction</returns>
         public MovieRatingPrediction UseModelForSinglePrediction(float userId, float movieId)
         {
             var predictionEngine = _MlContext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(_Model);
@@ -26,7 +39,10 @@ namespace MovieRecommender
 
             return movieRatingPrediction;
         }
-
+        
+        /// <summary>
+        /// Call members to build and evaluate model
+        /// </summary>
         private void PrepareModel()
         {
             (IDataView trainingDataView, IDataView testDataView) = LoadData();
@@ -34,6 +50,10 @@ namespace MovieRecommender
             EvaluateModel(testDataView);
         }
 
+        /// <summary>
+        /// Load the training data set and format it according to the model
+        /// </summary>
+        /// <returns>trainingDataView, testDataView</returns>
         private (IDataView training, IDataView test) LoadData()
         {
             var trainingDataPath = Path.Combine(Environment.CurrentDirectory, "Data", "recommendation-ratings-train.csv");
@@ -45,6 +65,11 @@ namespace MovieRecommender
             return (trainingDataView, testDataView);
         }
 
+        /// <summary>
+        /// Train the model
+        /// </summary>
+        /// <param name="trainingDataView"></param>
+        /// <returns>model</returns>
         private ITransformer BuildAndTrainModel(IDataView trainingDataView)
         {
             IEstimator<ITransformer> estimator = _MlContext.Transforms.Conversion.MapValueToKey(outputColumnName: "userIdEncoded", inputColumnName: "userId")
@@ -65,7 +90,11 @@ namespace MovieRecommender
 
             return model;
         }
-
+        
+        /// <summary>
+        /// Evaluate the model performance
+        /// </summary>
+        /// <param name="testDataView"></param>
         private void EvaluateModel(IDataView testDataView)
         {
             Console.WriteLine("=============== Evaluating the model ===============");
