@@ -11,14 +11,29 @@ namespace MovieRecommender
     {
         private readonly List<Movie> _Movies;
         private readonly List<User> _Users;
+        private readonly List<Rating> _Ratings;
 
         public DataDescriptor()
         {
             _Movies = GetMovies();
             _Users = GetUsers();
+            _Ratings = GetRatings();
         }
 
         public int GetMoviesCount() => _Movies.Count;
+
+        public List<float> GetMoviesWatchedByUser(float userId)
+        {
+            var ratingsForUser = _Ratings.Where(m => m.userId == userId).ToList();
+            var moviesWatchedByuser = new List<float>();
+           
+            foreach(var rating in ratingsForUser)
+            {
+                moviesWatchedByuser.Add(rating.movieId);
+            }
+
+            return moviesWatchedByuser;
+        }
 
         public string GetMovieTitleByIndex(float index)
         {
@@ -30,6 +45,26 @@ namespace MovieRecommender
         {
             var user = _Users.Where(u => u.Index == index).FirstOrDefault();
             return (user.FirstName, user.LastName);
+        }
+
+        private List<Rating> GetRatings()
+        {
+            var projectPath = Environment.CurrentDirectory;
+
+            for (int i = 0; i < 3; i++)
+                projectPath = Directory.GetParent(projectPath).ToString();
+
+
+            var ratingsDataPath = Path.Combine(projectPath, "Data", "recommendation-ratings-train.csv");
+            List<Rating> records = null;
+
+            using (var reader = new StreamReader(ratingsDataPath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                records = csv.GetRecords<Rating>().ToList();
+            }
+
+            return records;
         }
 
         private List<Movie> GetMovies()
@@ -84,5 +119,13 @@ namespace MovieRecommender
         public float Index { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+    }
+
+    public class Rating
+    {
+        public float userId { get; set; }
+        public float movieId { get; set; }
+        public float rating { get; set; }
+        public float timestamp { get; set; }
     }
 }

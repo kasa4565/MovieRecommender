@@ -23,13 +23,16 @@ namespace MovieRecommender
             var worstSevenMoviesId = new List<float>();
 
             var moviesRatingList = GetMoviesRatingForUser(userIndex);
-            moviesRatingList = moviesRatingList.OrderBy(l => l.Score).ToList();
+            moviesRatingList = moviesRatingList.OrderBy(r => r.Score).ToList();
 
-            var bestSevenMovies = moviesRatingList.Take(7);
+            var moviesWatchedByUser = _DataDescriptor.GetMoviesWatchedByUser(userIndex);
+            moviesRatingList.RemoveAll(r => moviesWatchedByUser.Contains(r.MovieId));
+
+            var bestSevenMovies = moviesRatingList.TakeLast(7);
             foreach (var movie in bestSevenMovies)
                 bestSevenMoviesId.Add(movie.MovieId);
 
-            var worstSevenMovies = moviesRatingList.TakeLast(7);
+            var worstSevenMovies = moviesRatingList.Take(7);
             foreach (var movie in worstSevenMovies)
                 worstSevenMoviesId.Add(movie.MovieId);
 
