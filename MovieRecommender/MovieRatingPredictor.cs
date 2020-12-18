@@ -19,7 +19,6 @@ namespace MovieRecommender
 
         public MovieRatingPrediction UseModelForSinglePrediction(float userId, float movieId)
         {
-            Console.WriteLine("=============== Making a prediction ===============");
             var predictionEngine = _MlContext.Model.CreatePredictionEngine<MovieRating, MovieRatingPrediction>(_Model);
             var testInput = new MovieRating { userId = userId, movieId = movieId };
 

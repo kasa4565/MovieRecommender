@@ -21,6 +21,7 @@ namespace MovieRecommender
 
         private static void PrintResults((List<float> bestSevenMovies, List<float> worstSevenMovies) movieRecommendation)
         {
+            Console.WriteLine("=============== Making a prediction ===============");
             var userNames = _DataDescriptor.GetUserNamesByIndex(_UserId);
 
             foreach (var id in movieRecommendation.bestSevenMovies)
