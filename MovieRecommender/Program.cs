@@ -7,8 +7,11 @@ namespace MovieRecommender
 {
     class Program
     {
+        private static DataDescriptor _DataDescriptor;
+
         static void Main(string[] args)
         {
+            _DataDescriptor = new DataDescriptor();
             MLContext mlContext = new MLContext();
             (IDataView trainingDataView, IDataView testDataView) = LoadData(mlContext);
             ITransformer model = BuildAndTrainModel(mlContext, trainingDataView);
@@ -60,13 +63,17 @@ namespace MovieRecommender
             var testInput = new MovieRating { userId = 37, movieId = 175 };
 
             var movieRatingPrediction = predictionEngine.Predict(testInput);
+            var movieTitle = _DataDescriptor.GetMovieTitleByIndex(testInput.movieId);
+            var userNames = _DataDescriptor.GetUserNamesByIndex(testInput.userId);
+
+
             if (Math.Round(movieRatingPrediction.Score, 1) > 7)
             {
-                Console.WriteLine("Movie " + testInput.movieId + " is recommended for user " + testInput.userId);
+                Console.WriteLine("Movie \"" + movieTitle + "\" is recommended for user " + userNames.firstName + " " + userNames.lastName);
             }
             else
             {
-                Console.WriteLine("Movie " + testInput.movieId + " is not recommended for user " + testInput.userId);
+                Console.WriteLine("Movie \"" + movieTitle + "\" is not recommended for user " + userNames.firstName + " " + userNames.lastName);
             }
 
         }
