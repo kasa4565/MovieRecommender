@@ -18,6 +18,7 @@ namespace MovieRecommender
         /// </summary>
         private readonly List<Movie> _Movies;
         private readonly List<User> _Users;
+        private readonly List<Rating> _Ratings;
 
         /// <summary>
         /// Constructor of DataDescriptor class
@@ -26,6 +27,7 @@ namespace MovieRecommender
         {
             _Movies = GetMovies();
             _Users = GetUsers();
+            _Ratings = GetRatings();
         }
 
         /// <summary>
@@ -39,6 +41,19 @@ namespace MovieRecommender
         /// </summary>
         /// <param name="index"></param>
         /// <returns>movie.Title</returns>
+        public List<float> GetMoviesWatchedByUser(float userId)
+        {
+            var ratingsForUser = _Ratings.Where(m => m.userId == userId).ToList();
+            var moviesWatchedByuser = new List<float>();
+           
+            foreach(var rating in ratingsForUser)
+            {
+                moviesWatchedByuser.Add(rating.movieId);
+            }
+
+            return moviesWatchedByuser;
+        }
+
         public string GetMovieTitleByIndex(float index)
         {
             var movie = _Movies.Where(m => m.Index == index).FirstOrDefault();
@@ -56,10 +71,33 @@ namespace MovieRecommender
             return (user.FirstName, user.LastName);
         }
 
+<<<<<<< HEAD
         /// <summary>
         /// Read movies from file and return List-type data
         /// </summary>
         /// <returns>records</returns>
+=======
+        private List<Rating> GetRatings()
+        {
+            var projectPath = Environment.CurrentDirectory;
+
+            for (int i = 0; i < 3; i++)
+                projectPath = Directory.GetParent(projectPath).ToString();
+
+
+            var ratingsDataPath = Path.Combine(projectPath, "Data", "recommendation-ratings-train.csv");
+            List<Rating> records = null;
+
+            using (var reader = new StreamReader(ratingsDataPath))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                records = csv.GetRecords<Rating>().ToList();
+            }
+
+            return records;
+        }
+
+>>>>>>> origin/DisplayImprovement
         private List<Movie> GetMovies()
         {
             var projectPath = Environment.CurrentDirectory;
@@ -123,4 +161,16 @@ namespace MovieRecommender
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
+<<<<<<< HEAD
 }
+=======
+
+    public class Rating
+    {
+        public float userId { get; set; }
+        public float movieId { get; set; }
+        public float rating { get; set; }
+        public float timestamp { get; set; }
+    }
+}
+>>>>>>> origin/DisplayImprovement
